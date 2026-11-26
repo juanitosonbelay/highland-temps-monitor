@@ -2,7 +2,7 @@ name: Highland weather cloud
 on:
   workflow_dispatch:
   schedule:
-    - cron: '7 0,4,8,12,16,17,20 * * *'
+    - cron: '7 0,4,8,12,16,20 * * *'
 permissions:
   contents: write
   pages: write
