@@ -14,7 +14,7 @@ def build(path):
             if not m: raise ValueError('Unexpected timestamp: '+t)
             dt=datetime.fromisoformat(m[1]).replace(tzinfo=timezone(timedelta(hours=int(m[2]=='BST')))); stamp=dt.astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
             row=[stamp,r['Location'],r['Measurement'],num(r['Temperature (°C)']),r['Status'],num(r['Wind Speed (mph)']),r['Wind Direction'],num(r['Wind Gust (mph)']),r['Wind Label'],'',r['Wind Status']]
-            if row[1] == "Aonach Mor (650m)":
+            if row[1] in ("Aonach Mor (650m)", "Aonach Mor (1185m)"):
                 row[5:9] = [None, "", None, ""]
                 row[10] = "Not available"
             rows[tuple(row[:3])]=row

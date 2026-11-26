@@ -149,6 +149,10 @@ def _parse_wind(reading, html, kind):
     return reading
 
 def add_wind(reading, html, kind):
+    if reading.location in ("Aonach Mor (650m)", "Aonach Mor (1185m)"):
+        reading.wind_speed = reading.wind_direction = reading.wind_gust = None
+        reading.wind_status = "Not available"
+        return reading
     try:
         result = _parse_wind(reading, html, kind)
         logging.getLogger("highlands_weather").info("Wind %s: %s speed=%s direction=%s gust=%s", reading.location, result.wind_status, result.wind_speed, result.wind_direction, result.wind_gust)
@@ -468,6 +472,11 @@ def collect_all(logger: logging.Logger) -> list[Reading]:
     except Exception as exc:
         logger.exception("Aviemore collection failed")
         readings.append(missing_reading("Aviemore", "Aviemore", "Air Temperature", URL_AVIEMORE, exc))
+
+    for reading in readings:
+        if reading.location in ("Aonach Mor (650m)", "Aonach Mor (1185m)"):
+            reading.wind_speed = reading.wind_direction = reading.wind_gust = None
+            reading.wind_status = "Not available"
 
     # Keep the fixed row order used by the Excel dashboard.
     order = {(loc, measure): idx for idx, (_, loc, measure, _) in enumerate(BASE_ITEMS)}
